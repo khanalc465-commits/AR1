@@ -1,0 +1,211 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1,
+                 user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#07111f" />
+  <title>Ball Runner 3D</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.4/dist/aframe-physics-system.min.js"></script>
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <div id="hud">
+    <div class="game-title">BALL RUNNER <span>3D</span></div>
+    <div id="scoreDisplay">SCORE: 0</div>
+    <div class="hint">Dodge the blocks!</div>
+  </div>
+
+  <div id="startScreen" class="overlay">
+    <div class="panel">
+      <h1>BALL RUNNER</h1>
+      <p>Stay on the road. Avoid the obstacles!</p>
+      <p class="instructions">Use the LEFT and RIGHT buttons to move.</p>
+      <button id="startButton" class="main-button">▶ START GAME</button>
+    </div>
+  </div>
+
+  <div id="gameOver" class="overlay hidden">
+    <div class="panel">
+      <h1>GAME OVER</h1>
+      <p id="finalScore">Score: 0</p>
+      <button id="restartButton" class="main-button">↻ PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <div id="mobileControls">
+    <button id="leftButton" class="control-button"
+            aria-label="Move left">◀</button>
+    <button id="rightButton" class="control-button"
+            aria-label="Move right">▶</button>
+  </div>
+
+  <a-scene
+    id="gameScene"
+    physics="gravity: -9.8"
+    renderer="antialias: true; colorManagement: true"
+    vr-mode-ui="enabled: false"
+    loading-screen="enabled: false">
+
+    <a-assets>
+      <img id="grass" src="assets/images/grass.png" />
+      <img id="sky" src="assets/images/Sky.jpg" />
+    </a-assets>
+
+    <a-sky
+      material="src: #sky"
+      color="#182b50"
+      animation="property: rotation; to: 0 360 0;
+                 loop: true; dur: 5020000; easing: linear">
+    </a-sky>
+
+    <!-- Decorative start scene -->
+    <a-entity position="0 6 -15"
+      animation="property: position; to: 0 7 -15;
+                 dir: alternate; dur: 1500; loop: true">
+      <a-torus radius="2" radius-tubular="0.08" color="cyan"
+        material="emissive: #00ffff; emissiveIntensity: 2"
+        animation="property: rotation; to: 360 360 0;
+                   dur: 5000; loop: true; easing: linear">
+      </a-torus>
+      <a-text value="READY?" align="center" color="#00ffff"
+              width="6" position="0 0 0"></a-text>
+    </a-entity>
+
+    <a-sphere position="-7 6 -15" radius="0.4" color="cyan"
+      material="emissive: #00ffff; emissiveIntensity: 2"
+      animation="property: position; to: -7 7 -15;
+                 dir: alternate; dur: 1800; loop: true">
+    </a-sphere>
+
+    <a-sphere position="7 7 -15" radius="0.4" color="magenta"
+      material="emissive: #ff00ff; emissiveIntensity: 2"
+      animation="property: position; to: 7 6 -15;
+                 dir: alternate; dur: 1800; loop: true">
+    </a-sphere>
+
+    <a-torus position="-9 8 -20" radius="1"
+      radius-tubular="0.05" color="yellow"
+      animation="property: rotation; to: 360 360 0;
+                 dur: 4000; loop: true">
+    </a-torus>
+
+    <a-sphere position="-5 9 -25" radius="0.25" color="white"
+      material="emissive: white; emissiveIntensity: 3"
+      animation="property: position; to: -5 8 -25;
+                 dir: alternate; dur: 1200; loop: true">
+    </a-sphere>
+
+    <a-torus position="9 8 -20" radius="1"
+      radius-tubular="0.05" color="yellow"
+      animation="property: rotation; to: -360 -360 0;
+                 dur: 4000; loop: true">
+    </a-torus>
+
+    <a-sphere position="5 9 -25" radius="0.25" color="white"
+      material="emissive: white; emissiveIntensity: 3"
+      animation="property: position; to: 5 8 -25;
+                 dir: alternate; dur: 1200; loop: true">
+    </a-sphere>
+
+    <!-- Ground -->
+    <a-plane id="infinite-grass"
+      position="0 -3 -60"
+      rotation="-90 0 0"
+      width="300" height="300"
+      material="src: #grass; repeat: 50 50">
+    </a-plane>
+
+    <!-- Endless road segments -->
+    <a-box class="road" position="0 0.1 5"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -15"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -35"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -55"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -75"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -95"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -115"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+    <a-box class="road" position="0 0.1 -135"
+      width="10" height="0.2" depth="20"
+      color="#444950" static-body></a-box>
+
+    <!-- Road markings -->
+    <a-box class="road-line" position="0 0.22 5"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -15"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -35"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -55"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -75"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -95"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -115"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+    <a-box class="road-line" position="0 0.22 -135"
+      width="0.3" height="0.05" depth="5" color="white"></a-box>
+
+    <!-- Player -->
+    <a-sphere id="ball" position="0 1 5"
+      radius="0.5" color="red" dynamic-body>
+      <a-box position="0 -0.5 0"
+        width="1.5" height="0.5" depth="2"
+        color="blue"></a-box>
+      <a-box position="0 -0.2 0"
+        width="1" height="0.4" depth="1"
+        color="cyan"></a-box>
+      <a-cylinder position="-0.7 -0.7 0.6"
+        radius="0.3" height="0.2"
+        rotation="0 0 90" color="black"></a-cylinder>
+      <a-cylinder position="0.7 -0.7 0.6"
+        radius="0.3" height="0.2"
+        rotation="0 0 90" color="black"></a-cylinder>
+    </a-sphere>
+
+    <!-- Obstacles -->
+    <a-box class="obstacle" position="-3 0.7 -20"
+      width="1" height="1.4" depth="1"
+      color="orange" static-body></a-box>
+    <a-box class="obstacle" position="3 0.7 -40"
+      width="1" height="1.4" depth="1"
+      color="red" static-body></a-box>
+    <a-box class="obstacle" position="0 0.7 -60"
+      width="1" height="1.4" depth="1"
+      color="yellow" static-body></a-box>
+    <a-box class="obstacle" position="-3 0.7 -80"
+      width="1" height="1.4" depth="1"
+      color="blue" static-body></a-box>
+
+    <!-- Camera -->
+    <a-entity position="0 5 12" rotation="-15 0 0">
+      <a-camera id="mainCamera"
+        look-controls="enabled: false"
+        wasd-controls="enabled: false">
+      </a-camera>
+    </a-entity>
+
+  </a-scene>
+</body>
+</html>
